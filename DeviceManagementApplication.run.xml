@@ -10,7 +10,7 @@
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/microservices/device-management" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="com.dms.dmssensors.device.management.*" />
+        <option name="PATTERN" value="com.dms.dmssensors.device.management.common.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

@@ -1,4 +1,4 @@
-package com.dms.dmssensors.device.management;
+package com.dms.dmssensors.device.management.common;
 
 import io.hypersistence.tsid.TSID;
 
