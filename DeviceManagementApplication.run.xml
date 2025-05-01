@@ -1,5 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="DeviceManagementApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <envs>
+      <env name="tsid.node" value="7" />
+      <env name="tsid.node.count" value="64" />
+    </envs>
     <option name="MAIN_CLASS_NAME" value="com.dms.dmssensors.device.management.DeviceManagementApplication" />
     <module name="device-management.main" />
     <option name="VM_PARAMETERS" value="-XX:MaxRAM=256m" />
