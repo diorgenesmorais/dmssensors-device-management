@@ -1,6 +1,7 @@
 package com.dms.dmssensors.device.management.api.controller;
 
 import com.dms.dmssensors.device.management.api.model.SensorInput;
+import com.dms.dmssensors.device.management.api.model.SensorOutput;
 import com.dms.dmssensors.device.management.common.IdGenerate;
 import com.dms.dmssensors.device.management.domain.model.Sensor;
 import com.dms.dmssensors.device.management.domain.model.SensorId;
@@ -22,7 +23,7 @@ public class SensorController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Sensor createSensor(@RequestBody SensorInput input) {
+    public SensorOutput createSensor(@RequestBody SensorInput input) {
         Sensor sensor = Sensor.builder()
                 .id(new SensorId(IdGenerate.generateTSID()))
                 .name(input.getName())
@@ -33,6 +34,16 @@ public class SensorController {
                 .enabled(false)
                 .build();
 
-        return sensorRepository.saveAndFlush(sensor);
+        sensor = sensorRepository.saveAndFlush(sensor);
+
+        return SensorOutput.builder()
+                .id(sensor.getId().getValue())
+                .name(sensor.getName())
+                .ip(sensor.getIp())
+                .location(sensor.getLocation())
+                .protocol(sensor.getProtocol())
+                .model(sensor.getModel())
+                .enabled(sensor.getEnabled())
+                .build();
     }
 }
