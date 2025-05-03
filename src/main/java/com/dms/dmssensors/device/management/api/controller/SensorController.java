@@ -8,6 +8,9 @@ import com.dms.dmssensors.device.management.domain.model.SensorId;
 import com.dms.dmssensors.device.management.domain.repository.SensorRepository;
 import io.hypersistence.tsid.TSID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,5 +64,11 @@ public class SensorController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         return convertToModel(sensor);
+    }
+
+    @GetMapping
+    public Page<SensorOutput> search(@PageableDefault Pageable pageable) {
+        return sensorRepository.findAll(pageable)
+                .map(this::convertToModel);
     }
 }
