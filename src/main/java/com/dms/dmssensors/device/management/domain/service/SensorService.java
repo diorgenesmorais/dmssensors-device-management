@@ -41,4 +41,11 @@ public class SensorService {
 
         sensorRepository.delete(fetchSensor);
     }
+
+    @Transactional
+    public void enableSensor(TSID sensorId) {
+        fetchById(sensorId);
+
+        sensorRepository.enableSensor(sensorId.toLong());
+    }
 }
