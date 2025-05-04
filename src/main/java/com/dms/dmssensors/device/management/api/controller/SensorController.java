@@ -8,7 +8,6 @@ import com.dms.dmssensors.device.management.domain.model.SensorId;
 import com.dms.dmssensors.device.management.domain.repository.SensorRepository;
 import com.dms.dmssensors.device.management.domain.service.SensorService;
 import io.hypersistence.tsid.TSID;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -79,30 +78,18 @@ public class SensorController {
 
     @PutMapping("/{sensorId}")
     public SensorOutput updateSensor(@RequestBody SensorInput input, @PathVariable TSID sensorId) {
-        try {
-            return sensorService.updateSensor(input, sensorId);
-        } catch (EntityNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        }
+        return sensorService.updateSensor(input, sensorId);
     }
 
     @DeleteMapping("/{sensorId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSensor(@PathVariable TSID sensorId) {
-        try {
-            sensorService.deleteSensor(sensorId);
-        } catch (EntityNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        }
+        sensorService.deleteSensor(sensorId);
     }
 
     @PutMapping("/{sensorId}/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void enableSensor(@PathVariable TSID sensorId) {
-        try {
-            sensorService.enableSensor(sensorId);
-        } catch (EntityNotFoundException ex) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
-        }
+        sensorService.enableSensor(sensorId);
     }
 }
