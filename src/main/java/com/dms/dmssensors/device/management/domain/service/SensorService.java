@@ -1,7 +1,6 @@
 package com.dms.dmssensors.device.management.domain.service;
 
 import com.dms.dmssensors.device.management.api.model.SensorInput;
-import com.dms.dmssensors.device.management.api.model.SensorMapper;
 import com.dms.dmssensors.device.management.api.model.SensorOutput;
 import com.dms.dmssensors.device.management.common.IdGenerate;
 import com.dms.dmssensors.device.management.domain.model.Sensor;
@@ -19,46 +18,69 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SensorService {
     private final SensorRepository sensorRepository;
-    private final SensorMapper sensorMapper;
 
     public Sensor fetchById(TSID sensorId) {
         return sensorRepository.findById(new SensorId(sensorId))
                 .orElseThrow(() -> new EntityNotFoundException("Sensor not found"));
     }
 
+    private Sensor toEntity(SensorInput input) {
+        return Sensor.builder()
+                .name(input.getName())
+                .ip(input.getIp())
+                .location(input.getLocation())
+                .protocol(input.getProtocol())
+                .model(input.getModel())
+                .build();
+    }
+
+    private SensorOutput toOutput(Sensor sensor) {
+        if (sensor == null) return null;
+
+        return SensorOutput.builder()
+                .id(sensor.getId() != null ? sensor.getId().getValue() : null)
+                .name(sensor.getName())
+                .ip(sensor.getIp())
+                .location(sensor.getLocation())
+                .protocol(sensor.getProtocol())
+                .model(sensor.getModel())
+                .enabled(sensor.getEnabled())
+                .build();
+    }
+
     @Transactional
     public SensorOutput saveSensor(SensorInput input) {
-        Sensor sensor = sensorMapper.toEntity(input);
+        Sensor sensor = this.toEntity(input);
         sensor.setId(new SensorId(IdGenerate.generateTSID()));
         sensor.setEnabled(false);
 
         sensor = sensorRepository.saveAndFlush(sensor);
 
-        return sensorMapper.toOutput(sensor);
+        return this.toOutput(sensor);
     }
 
     public SensorOutput getSensor(TSID sensorId) {
         Sensor fetchSensor = fetchById(sensorId);
 
-        return sensorMapper.toOutput(fetchSensor);
+        return this.toOutput(fetchSensor);
     }
 
     public Page<SensorOutput> searchSensors(Pageable pageable) {
         return sensorRepository.findAll(pageable)
-                .map(sensorMapper::toOutput);
+                .map(this::toOutput);
     }
 
     @Transactional
     public SensorOutput updateSensor(SensorInput input, TSID sensorId) {
         Sensor fetchSensor = fetchById(sensorId);
 
-        Sensor sensor = sensorMapper.toEntity(input);
+        Sensor sensor = this.toEntity(input);
         sensor.setId(new SensorId(sensorId));
         sensor.setEnabled(fetchSensor.getEnabled());
 
         sensor = sensorRepository.saveAndFlush(sensor);
 
-        return sensorMapper.toOutput(sensor);
+        return this.toOutput(sensor);
     }
 
     public void deleteSensor(TSID sensorId) {
