@@ -92,4 +92,10 @@ public class SensorController {
     public void enableSensor(@PathVariable TSID sensorId) {
         sensorService.enableSensor(sensorId);
     }
+
+    @DeleteMapping("/{sensorId}/enable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void disableSensor(@PathVariable TSID sensorId) {
+        sensorService.disableSensor(sensorId);
+    }
 }

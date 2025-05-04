@@ -46,6 +46,13 @@ public class SensorService {
     public void enableSensor(TSID sensorId) {
         fetchById(sensorId);
 
-        sensorRepository.enableSensor(sensorId.toLong());
+        sensorRepository.enableOrDisableSensor(true, sensorId.toLong());
+    }
+
+    @Transactional
+    public void disableSensor(TSID sensorId) {
+        fetchById(sensorId);
+
+        sensorRepository.enableOrDisableSensor(false, sensorId.toLong());
     }
 }

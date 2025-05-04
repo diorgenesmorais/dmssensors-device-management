@@ -9,6 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface SensorRepository extends JpaRepository<Sensor, SensorId> {
     @Modifying
-    @Query(value = "UPDATE sensor SET enabled = true WHERE id = :id", nativeQuery = true)
-    void enableSensor(@Param("id") Long id);
+    @Query(value = "UPDATE sensor SET enabled = :enabled WHERE id = :id", nativeQuery = true)
+    void enableOrDisableSensor(@Param("enabled") boolean enabled, @Param("id") Long id);
 }
