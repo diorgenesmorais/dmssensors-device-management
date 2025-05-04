@@ -18,10 +18,14 @@ public class SensorService {
     private final SensorRepository sensorRepository;
     private final SensorMapper sensorMapper;
 
+    public Sensor fetchById(TSID sensorId) {
+        return sensorRepository.findById(new SensorId(sensorId))
+                .orElseThrow(() -> new EntityNotFoundException("Sensor not found"));
+    }
+
     @Transactional
     public SensorOutput updateSensor(SensorInput input, TSID sensorId) {
-        Sensor fetchSensor = sensorRepository.findById(new SensorId(sensorId))
-                .orElseThrow(() -> new EntityNotFoundException("Sensor not found"));
+        Sensor fetchSensor = fetchById(sensorId);
 
         Sensor sensor = sensorMapper.toEntity(input);
         sensor.setId(new SensorId(sensorId));
@@ -30,5 +34,11 @@ public class SensorService {
         sensor = sensorRepository.saveAndFlush(sensor);
 
         return sensorMapper.toOutput(sensor);
+    }
+
+    public void deleteSensor(TSID sensorId) {
+        Sensor fetchSensor = fetchById(sensorId);
+
+        sensorRepository.delete(fetchSensor);
     }
 }
