@@ -19,4 +19,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemDetail body = createProblemDetail(ex, status, ex.getMessage(), null, null, request);
         return super.handleExceptionInternal(ex, body, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
+
+    @ExceptionHandler(MonitoringUnavailableException.class)
+    public ResponseEntity<Object> handleMonitoringUnavailable(MonitoringUnavailableException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.SERVICE_UNAVAILABLE;
+        ProblemDetail body = createProblemDetail(ex, status, ex.getMessage(), null, null, request);
+        return super.handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
+    }
 }

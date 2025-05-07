@@ -53,11 +53,11 @@ public class SensorController {
         sensorService.deleteSensor(sensorId);
     }
 
-    @PutMapping("/{sensorId}/enable")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void enableSensor(@PathVariable TSID sensorId) {
-        sensorService.enableSensor(sensorId);
-    }
+        @PutMapping("/{sensorId}/enable")
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        public void enableSensor(@PathVariable TSID sensorId) {
+            sensorService.enableSensor(sensorId);
+        }
 
     @DeleteMapping("/{sensorId}/enable")
     @ResponseStatus(HttpStatus.NO_CONTENT)

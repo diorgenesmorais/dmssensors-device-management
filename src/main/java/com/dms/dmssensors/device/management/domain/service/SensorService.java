@@ -1,5 +1,6 @@
 package com.dms.dmssensors.device.management.domain.service;
 
+import com.dms.dmssensors.device.management.api.client.SensorMonitoringClient;
 import com.dms.dmssensors.device.management.api.model.SensorInput;
 import com.dms.dmssensors.device.management.api.model.SensorOutput;
 import com.dms.dmssensors.device.management.common.IdGenerate;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SensorService {
     private final SensorRepository sensorRepository;
+    private final SensorMonitoringClient sensorMonitoringClient;
 
     public Sensor fetchById(TSID sensorId) {
         return sensorRepository.findById(new SensorId(sensorId))
@@ -83,10 +85,13 @@ public class SensorService {
         return this.toOutput(sensor);
     }
 
+    @Transactional
     public void deleteSensor(TSID sensorId) {
         Sensor fetchSensor = fetchById(sensorId);
 
         sensorRepository.delete(fetchSensor);
+
+        sensorMonitoringClient.disableMonitoring(sensorId);
     }
 
     @Transactional
@@ -94,6 +99,8 @@ public class SensorService {
         fetchById(sensorId);
 
         sensorRepository.enableOrDisableSensor(true, sensorId.toLong());
+
+        sensorMonitoringClient.enableMonitoring(sensorId);
     }
 
     @Transactional
@@ -101,5 +108,7 @@ public class SensorService {
         fetchById(sensorId);
 
         sensorRepository.enableOrDisableSensor(false, sensorId.toLong());
+
+        sensorMonitoringClient.disableMonitoring(sensorId);
     }
 }
