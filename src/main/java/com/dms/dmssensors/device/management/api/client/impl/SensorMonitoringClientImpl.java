@@ -2,10 +2,10 @@ package com.dms.dmssensors.device.management.api.client.impl;
 
 import com.dms.dmssensors.device.management.api.client.SensorMonitoringClient;
 import com.dms.dmssensors.device.management.api.exception.MonitoringUnavailableException;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.hypersistence.tsid.TSID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -21,6 +21,10 @@ public class SensorMonitoringClientImpl implements SensorMonitoringClient {
     ) {
         this.restClient = builder
                 .baseUrl(baseUrl)
+                .defaultStatusHandler(HttpStatusCode::isError, (req, resp) -> {
+                    log.error("Erro ao chamar serviço de monitoramento");
+                    throw new SensorMonitoringClientBadGatewayException("Erro ao chamar serviço de monitoramento");
+                })
                 .build();
     }
 
@@ -34,7 +38,7 @@ public class SensorMonitoringClientImpl implements SensorMonitoringClient {
         throw new MonitoringUnavailableException("Serviço de monitoramento indisponível no momento");
     }
 
-    @CircuitBreaker(name = "sensorMonitoring", fallbackMethod = "fallbackEnableMonitoring")
+    //@CircuitBreaker(name = "sensorMonitoring", fallbackMethod = "fallbackEnableMonitoring")
     @Override
     public void enableMonitoring(TSID sensorId) {
         this.restClient.put()
@@ -43,7 +47,7 @@ public class SensorMonitoringClientImpl implements SensorMonitoringClient {
                 .toBodilessEntity();
     }
 
-    @CircuitBreaker(name = "sensorMonitoring", fallbackMethod = "fallbackDisableMonitoring")
+    //@CircuitBreaker(name = "sensorMonitoring", fallbackMethod = "fallbackDisableMonitoring")
     @Override
     public void disableMonitoring(TSID sensorId) {
         this.restClient.delete()

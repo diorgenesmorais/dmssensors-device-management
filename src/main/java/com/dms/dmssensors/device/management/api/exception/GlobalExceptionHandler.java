@@ -1,5 +1,6 @@
 package com.dms.dmssensors.device.management.api.exception;
 
+import com.dms.dmssensors.device.management.api.client.impl.SensorMonitoringClientBadGatewayException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MonitoringUnavailableException.class)
     public ResponseEntity<Object> handleMonitoringUnavailable(MonitoringUnavailableException ex, WebRequest request) {
         HttpStatus status = HttpStatus.SERVICE_UNAVAILABLE;
+        ProblemDetail body = createProblemDetail(ex, status, ex.getMessage(), null, null, request);
+        return super.handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(SensorMonitoringClientBadGatewayException.class)
+    public ResponseEntity<Object> handleMonitoringBadGateway(SensorMonitoringClientBadGatewayException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.BAD_GATEWAY;
         ProblemDetail body = createProblemDetail(ex, status, ex.getMessage(), null, null, request);
         return super.handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
     }
