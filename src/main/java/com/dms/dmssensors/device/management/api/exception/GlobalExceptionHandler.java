@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.io.IOException;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
+import java.net.URI;
+import java.nio.channels.ClosedChannelException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -31,7 +37,26 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(SensorMonitoringClientBadGatewayException.class)
     public ResponseEntity<Object> handleMonitoringBadGateway(SensorMonitoringClientBadGatewayException ex, WebRequest request) {
         HttpStatus status = HttpStatus.BAD_GATEWAY;
-        ProblemDetail body = createProblemDetail(ex, status, ex.getMessage(), null, null, request);
+        ProblemDetail body = ProblemDetail.forStatus(status);
+        body.setTitle("Bad Gateway");
+        body.setDetail(ex.getMessage());
+        body.setType(URI.create("/api/errors/bad-gateway"));
+
+        return super.handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler({
+            SocketTimeoutException.class,
+            ConnectException.class,
+            ClosedChannelException.class
+    })
+    public ResponseEntity<Object> handleBadGateway(IOException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.GATEWAY_TIMEOUT;
+        ProblemDetail body = ProblemDetail.forStatus(status);
+        body.setTitle("Gateway timeout");
+        body.setDetail(ex.getMessage());
+        body.setType(URI.create("/api/errors/gateway-timeout"));
+
         return super.handleExceptionInternal(ex, body, new HttpHeaders(), status, request);
     }
 }

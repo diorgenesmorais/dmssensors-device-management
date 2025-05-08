@@ -6,8 +6,12 @@ import io.hypersistence.tsid.TSID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+
+import java.time.Duration;
 
 @Slf4j
 @Component
@@ -20,12 +24,21 @@ public class SensorMonitoringClientImpl implements SensorMonitoringClient {
             @Value("${sensor.monitoring.base.url}") String baseUrl
     ) {
         this.restClient = builder
+                .requestFactory(generateClientHttpRequestFactory())
                 .baseUrl(baseUrl)
                 .defaultStatusHandler(HttpStatusCode::isError, (req, resp) -> {
                     log.error("Erro ao chamar serviço de monitoramento");
                     throw new SensorMonitoringClientBadGatewayException("Erro ao chamar serviço de monitoramento");
                 })
                 .build();
+    }
+
+    private ClientHttpRequestFactory generateClientHttpRequestFactory() {
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setReadTimeout(Duration.ofSeconds(5));
+        factory.setConnectTimeout(Duration.ofSeconds(3));
+
+        return factory;
     }
 
     public void fallbackEnableMonitoring(TSID sensorId, Throwable t) {
