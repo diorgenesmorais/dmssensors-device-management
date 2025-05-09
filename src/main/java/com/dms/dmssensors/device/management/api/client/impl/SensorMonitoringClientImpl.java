@@ -6,11 +6,18 @@ import com.dms.dmssensors.device.management.api.exception.MonitoringUnavailableE
 import com.dms.dmssensors.device.management.api.model.SensorMonitoringOutput;
 import io.hypersistence.tsid.TSID;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+/**
+ * @deprecated This class is deprecated and should not be used in new code.
+ * It is kept for backward compatibility and may be removed in future versions.
+ *
+ * @since 1.0.0
+ */
 @Slf4j
-@Component
+//@Component
+@SuppressWarnings("java:S1133")
+@Deprecated(since = "1.0.0")
 public class SensorMonitoringClientImpl implements SensorMonitoringClient {
 
     private final RestClient restClient;
