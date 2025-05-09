@@ -3,6 +3,7 @@ package com.dms.dmssensors.device.management.api.client.impl;
 import com.dms.dmssensors.device.management.api.client.RestClientFactory;
 import com.dms.dmssensors.device.management.api.client.SensorMonitoringClient;
 import com.dms.dmssensors.device.management.api.exception.MonitoringUnavailableException;
+import com.dms.dmssensors.device.management.api.model.SensorMonitoringOutput;
 import io.hypersistence.tsid.TSID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -44,5 +45,13 @@ public class SensorMonitoringClientImpl implements SensorMonitoringClient {
                 .uri("/api/sensors/{sensorId}/monitoring/enable", sensorId)
                 .retrieve()
                 .toBodilessEntity();
+    }
+
+    @Override
+    public SensorMonitoringOutput getMonitoring(TSID sensorId) {
+        return this.restClient.get()
+                .uri("/api/sensors/{sensorId}/monitoring", sensorId)
+                .retrieve()
+                .body(SensorMonitoringOutput.class);
     }
 }

@@ -1,7 +1,9 @@
 package com.dms.dmssensors.device.management.domain.service;
 
 import com.dms.dmssensors.device.management.api.client.SensorMonitoringClient;
+import com.dms.dmssensors.device.management.api.model.SensorDetailOutput;
 import com.dms.dmssensors.device.management.api.model.SensorInput;
+import com.dms.dmssensors.device.management.api.model.SensorMonitoringOutput;
 import com.dms.dmssensors.device.management.api.model.SensorOutput;
 import com.dms.dmssensors.device.management.common.IdGenerate;
 import com.dms.dmssensors.device.management.domain.model.Sensor;
@@ -65,6 +67,17 @@ public class SensorService {
         Sensor fetchSensor = fetchById(sensorId);
 
         return this.toOutput(fetchSensor);
+    }
+
+    public SensorDetailOutput getSensorDetail(TSID sensorId) {
+        Sensor fetchSensor = fetchById(sensorId);
+
+        SensorMonitoringOutput monitoring = sensorMonitoringClient.getMonitoring(sensorId);
+
+        return SensorDetailOutput.builder()
+                .sensor(this.toOutput(fetchSensor))
+                .monitoring(monitoring)
+                .build();
     }
 
     public Page<SensorOutput> searchSensors(Pageable pageable) {

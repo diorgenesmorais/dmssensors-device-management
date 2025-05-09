@@ -1,5 +1,6 @@
 package com.dms.dmssensors.device.management.api.controller;
 
+import com.dms.dmssensors.device.management.api.model.SensorDetailOutput;
 import com.dms.dmssensors.device.management.api.model.SensorInput;
 import com.dms.dmssensors.device.management.api.model.SensorOutput;
 import com.dms.dmssensors.device.management.domain.service.SensorService;
@@ -63,5 +64,10 @@ public class SensorController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void disableSensor(@PathVariable TSID sensorId) {
         sensorService.disableSensor(sensorId);
+    }
+
+    @GetMapping("/{sensorId}/detail")
+    public SensorDetailOutput getSensorWithDetail(@PathVariable TSID sensorId) {
+        return sensorService.getSensorDetail(sensorId);
     }
 }
