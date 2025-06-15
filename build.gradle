@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'com.dms.dmssensors'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 
 java {
 	toolchain {
@@ -37,11 +37,16 @@ dependencies {
 	implementation 'io.hypersistence:hypersistence-tsid:2.1.4'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas:3.4.5'
 	implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+bootJar {
+	archiveFileName = 'device-management.jar'
 }
 
 tasks.named('test') {
