@@ -52,3 +52,8 @@ bootJar {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.register('dockerComposeUp', Exec) {
+	workingDir project.rootDir
+	commandLine 'docker', 'compose', 'up', '--build', '-d'
+}
