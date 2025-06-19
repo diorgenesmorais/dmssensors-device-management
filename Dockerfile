@@ -7,8 +7,9 @@ FROM eclipse-temurin:21-jre-jammy
 RUN groupadd -r appuser && useradd -r -g appuser appuser \
     && mkdir -p /home/appuser && chown -R appuser:appuser /home/appuser
 WORKDIR /app
-ENV JAR_NAME=device-management.jar
-ENV SERVER_PORT=8080
+ENV JAR_NAME=device-management.jar \
+    SERVER_PORT=8080 \
+    TZ=America/Sao_Paulo
 COPY --from=build /app/build/libs/$JAR_NAME .
 USER appuser
 HEALTHCHECK --interval=15s --timeout=5s --start-period=30s --retries=3 \
