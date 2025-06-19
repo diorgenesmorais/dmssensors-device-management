@@ -1,0 +1,16 @@
+services:
+  device-management-backend:
+    container_name: device-management-backend
+    build:
+      context: .
+      args:
+        - ENV=dev
+    ports:
+      - '8080:8080'
+    env_file:
+      - .env
+    networks:
+      - dms-net
+
+networks:
+  dms-net:
