@@ -1,7 +1,6 @@
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.5'
-	id 'io.spring.dependency-management' version '1.1.7'
 	id 'idea'
 }
 
@@ -32,15 +31,20 @@ repositories {
 }
 
 dependencies {
+	implementation platform("org.springframework.boot:spring-boot-dependencies:3.4.5")
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'io.hypersistence:hypersistence-tsid:2.1.4'
-	implementation 'org.springframework.boot:spring-boot-starter-hateoas:3.4.5'
-	implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	compileOnly 'org.projectlombok:lombok'
+
+	implementation 'io.hypersistence:hypersistence-tsid:2.1.4'
+	implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
+
+	compileOnly 'org.projectlombok:lombok:1.18.32'
 	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok:1.18.32'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
