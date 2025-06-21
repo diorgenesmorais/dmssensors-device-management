@@ -4,9 +4,10 @@ services:
     build:
       context: .
       args:
-        - ENV=dev
+        SERVER_PORT: ${SERVER_PORT}
+        TZ: ${TZ}
     ports:
-      - '8080:8080'
+      - '${HOST_PORT:-8080}:${SERVER_PORT:-8080}'
     env_file:
       - .env
     networks:
